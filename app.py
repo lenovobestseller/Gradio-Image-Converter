@@ -52,16 +52,22 @@ def gradio_interface(project_folder):
 
     return demo
 
-# Chạy ứng dụng
 if __name__ == "__main__":
-    # Kết nối Drive và tạo thư mục (chỉ trên Colab)
     try:
+        # Kiểm tra nếu đang trong IPython/Colab
+        get_ipython()  # Nếu không phải IPython, sẽ raise lỗi
         project_folder = setup_drive()
         print(f"Thư mục dự án: {project_folder}")
-    except ImportError:
-        # Nếu không phải Colab, bỏ qua kết nối Drive
+    except NameError:
+        # Nếu không phải Colab/IPython, bỏ qua mount và dùng thư mục cục bộ
         project_folder = os.getcwd()
-        print("Chạy cục bộ, không kết nối Drive.")
-    
+        print("Chạy cục bộ hoặc không phải Colab, không kết nối Drive.")
+    except Exception as e:
+        # Xử lý lỗi khác, như AttributeError
+        print(f"Lỗi khi mount Drive: {e}")
+        project_folder = os.getcwd()
+        print("Bỏ qua mount Drive, sử dụng thư mục cục bộ.")
+
     demo = gradio_interface(project_folder)
-    demo.launch(debug=True, share=True)  # share=True để tạo link công khai nếu cần
+    demo.launch(debug=True, share=True)
+
