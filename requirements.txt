@@ -1,0 +1,3 @@
+gradio
+pillow
+google-colab  # Chỉ cần cho Colab
